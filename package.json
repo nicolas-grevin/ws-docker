@@ -1,0 +1,17 @@
+{
+  "name": "workshop-docker",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "Nicolas Grévin <developer@nicolas-grevin.com>",
+  "license": "MIT",
+  "scripts": {
+    "start": "node index.js",
+    "start:dev": "nodemon index.js"
+  },
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1",
+    "mongoose": "^5.11.13",
+    "nodemon": "^2.0.7"
+  }
+}
