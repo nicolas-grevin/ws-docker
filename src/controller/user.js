@@ -49,7 +49,7 @@ exports.update = (req, res) => {
 };
 
 exports.delete = (req, res) => {
-    User.remove({_id: req.params.id}, (err, user) => {
+    User.deleteOne({_id: req.params.id}, (err, user) => {
         if (err)
             res.status(500).json({error: err});
 
