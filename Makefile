@@ -2,10 +2,17 @@ include .env
 
 start: ## Start application
 	$(info --> Start application)
+	@docker network create ws-docker-network
+	@docker run \
+		--detach \
+		--name ws-docker-mongo \
+		--network=ws-docker-network \
+		mongo:4
 	@docker run \
 		--rm \
 		--detach \
-		--name ws-docker \
+		--name ws-docker-node \
+		--network=ws-docker-network \
 		--env-file "$(CURDIR)/.env" \
 		--workdir "/srv/ws-docker" \
 		--volume "$(CURDIR):/srv/ws-docker" \
@@ -14,19 +21,21 @@ start: ## Start application
 
 stop: ## Stop application
 	$(info --> Stop application)
-	@docker stop ws-docker
-
-destroy: ## Stop and remove application
-	$(info --> Stop and remove a running application)
-	@docker rm --force --volumes ws-docker
+	@docker rm --force --volumes ws-docker-mongo
+	@docker rm --force --volumes ws-docker-node
+	@docker network rm ws-docker-network
 
 logs: ## Display logs
 	$(info --> Display log)
-	@docker logs --follow ws-docker
+	@docker logs --follow ws-docker-node
+
+sudo-bash: ## Enter to interactive mode into container
+	$(info --> Run ash inside the container app)
+	@docker exec -u 0:0 --interactive --tty ws-docker-node bash
 
 bash: ## Enter to interactive mode into container
 	$(info --> Run ash inside the container app)
-	@docker exec -u 0:0 --interactive --tty ws-docker bash
+	@docker exec --interactive --tty ws-docker-node bash
 
 build: ## Build container
 	$(info --> Build container)

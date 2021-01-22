@@ -19,14 +19,14 @@ router.get('/readiness', (req, res) => {
     res.json();
 })
 
-// router.route('/users')
-//     .get(userController.all)
-//     .post(userController.create);
-//
-// router.route('/users/:id')
-//     .get(userController.get)
-//     .patch(userController.update)
-//     .put(userController.update)
-//     .delete(userController.delete);
+router.route('/users')
+    .get(userController.all)
+    .post(userController.create);
+
+router.route('/users/:id')
+    .get(userController.get)
+    .patch(userController.update)
+    .put(userController.update)
+    .delete(userController.delete);
 
 module.exports = router;
