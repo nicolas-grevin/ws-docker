@@ -1,26 +1,18 @@
-FROM debian:stable-slim
-
 ARG NODE_VERSION=15
 
-RUN apt-get update \
-    && apt-get install --assume-yes curl
+FROM node:${NODE_VERSION}-alpine as dev
 
-RUN curl -sL https://deb.nodesource.com/setup_${NODE_VERSION}.x | bash - \
-    && apt-get install -y nodejs \
-    && npm install --global yarn
-
-RUN node --version \
-    && npm --version \
-    && yarn --version
-
-RUN useradd node \
-    && mkdir -p /home/node \
-    && chown -R node:node /home/node
-
-RUN apt-get clean
-
-WORKDIR /home/node
-
+VOLUME /app
+WORKDIR app
+EXPOSE 3333
 USER node
 
-CMD ["bash"]
+CMD ["node"]
+
+FROM dev as prod
+
+ADD . .
+
+RUN yarn install
+
+CMD ["yarn", "start"]

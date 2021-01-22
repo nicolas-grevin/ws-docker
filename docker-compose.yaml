@@ -1,0 +1,21 @@
+version: '3'
+
+services:
+  app:
+    image: nicolasgrevin/app:latest
+    build:
+      context: .
+      args:
+        NODE_VERSION: '15'
+      dockerfile: Dockerfile
+      target: dev
+    ports:
+    - ${PORT}:${PORT}
+    volumes:
+    - ${PWD}:/app
+    env_file:
+    - ${PWD}/.env
+    command: ash -c "yarn && yarn start:dev"
+
+  mongo:
+    image: mongo:4
