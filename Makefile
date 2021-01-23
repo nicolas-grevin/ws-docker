@@ -5,13 +5,12 @@ start: ## Start application
 	@docker run \
 		--rm \
 		--detach \
-		--user node:node \
 		--name ws-docker \
 		--env-file "$(CURDIR)/.env" \
 		--workdir "/srv/ws-docker" \
 		--volume "$(CURDIR):/srv/ws-docker" \
 		--publish ${PORT}:${PORT} \
-		node:current-alpine ash -c "yarn && yarn start:dev"
+		nicolasgrevin/node:15 bash -c "yarn && yarn start:dev"
 
 stop: ## Stop application
 	$(info --> Stop application)
@@ -25,9 +24,13 @@ logs: ## Display logs
 	$(info --> Display log)
 	@docker logs --follow ws-docker
 
-ash: ## Enter to interactive mode into container
+bash: ## Enter to interactive mode into container
 	$(info --> Run ash inside the container app)
-	@docker exec --interactive --tty ws-docker ash
+	@docker exec -u 0:0 --interactive --tty ws-docker bash
+
+build: ## Build container
+	$(info --> Build container)
+	@docker build --tag nicolasgrevin/node:15 .
 
 .DEFAULT_GOAL := help
 
